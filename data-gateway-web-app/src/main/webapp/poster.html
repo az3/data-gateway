@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Data Gateway API: poster.html</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+
+            function submit_client() {
+                // var json2 = {"transaction_id": $("#client_transaction_id").val(), "payload": $("#client_payload").val()};
+                var jsonStr = "{\"transaction_id\":\"" + $("#client_transaction_id").val() + "\",\"payload\":\"" + $("#client_payload").val() + "\"}";
+
+                $.ajax(
+                        {
+                            type: "POST",
+                            url: "./client",
+                            data: jsonStr,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'json',
+                            async: true,
+                            crossDomain: true,
+                            success: function(result) {
+                                $("#client_response").html($.param(result));
+                            },
+                            failure: function(errMsg) {
+                                alert(errMsg);
+                            }
+                        }
+                );
+            }
+
+            function generateRandomIp() {
+                var ip_address = Math.round(Math.random() * 255) + '.'
+                        + Math.round(Math.random() * 255) + '.'
+                        + Math.round(Math.random() * 255) + '.'
+                        + Math.round(Math.random() * 255);
+                return ip_address;
+            }
+
+            function dashedDate() {
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1;
+                var yyyy = today.getFullYear();
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = yyyy + "-" + mm + "-" + dd;
+                return today;
+            }
+
+            function generateTransactionId() {
+                var today = new Date();
+                var yyyy = today.getFullYear();
+                var mm = today.getMonth() + 1;
+                var dd = today.getDate();
+                var hh = today.getHours();
+                var mi = today.getMinutes();
+                var ss = today.getSeconds();
+
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (hh < 10) {
+                    hh = '0' + hh;
+                }
+                if (mi < 10) {
+                    mi = '0' + mi;
+                }
+                if (ss < 10) {
+                    ss = '0' + ss;
+                }
+
+                var orderId = "1" + yyyy + mm + dd + hh + mi + ss;
+                return orderId;
+            }
+
+        </script>
+    </head>
+    <body>
+
+        <div>Client API
+            <form id="form_qt" name="form_query" action="query" method="GET">
+                <label>transaction_id</label><input type="text" name="transaction_id" id="client_transaction_id" value="1" /><br />
+                <label>payload</label><input type="text" name="payload" id="client_payload" value="1" /><br />
+                <input type="button" name="button" value="Post" onclick="submit_client();" /> 
+                <div style="display:inline-block;" id="client_response"><i>response</i></div>
+            </form>
+        </div>
+        <div style="width: 500px;"><hr/></div>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var txId = generateTransactionId();
+                var str = dashedDate() + "_" + generateRandomIp();
+                $("#client_transaction_id").val(txId);
+                $("#client_payload").val(str);
+            });
+        </script>
+    </body>
+</html>

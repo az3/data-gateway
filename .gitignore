@@ -1,0 +1,4 @@
+/data-gateway-lib/target/
+/data-gateway-ejb/target/
+/data-gateway-web-app/target/
+/data-gateway-ear/target/
